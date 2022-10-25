@@ -481,7 +481,13 @@ class Cursor(object):
         else:
             self._query = trino.client.TrinoQuery(self._request, sql=operation,
                                                   experimental_python_types=self._experimental_pyton_types)
-            result = self._query.execute()
+            headers = {
+            'X-Presto-Catalog': 'hive',
+            'X-Presto-Schema': 'default',
+            'X-Presto-Source': 'trino',
+            'X-Presto-User': 'hadoop',
+        }
+            result = self._query.execute(headers)
         self._iterator = iter(result)
         return result
 
